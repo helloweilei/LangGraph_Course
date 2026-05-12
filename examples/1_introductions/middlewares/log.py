@@ -11,7 +11,7 @@ class LoggingMiddleware(AgentMiddleware):
 
     def after_agent(self, output: Any, **kwargs):
         """在Agent执行后调用"""
-        print(f"🔴 [Agent输出] {output}")
+        print(f"🔴 [Agent输出] ...")
 
     def wrap_model_call(self, request, handler: Callable):
         """包装模型调用"""
