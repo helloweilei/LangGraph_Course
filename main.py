@@ -1,6 +1,5 @@
-def main():
-    print("Hello from langgraph-course!")
+from examples._4_react_agent.react_graph import ask
 
 
 if __name__ == "__main__":
-    main()
+    ask("西安的天气如何?")
