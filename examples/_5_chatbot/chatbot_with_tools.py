@@ -4,7 +4,7 @@ import os
 from typing import List, Annotated, TypedDict
 from langgraph.graph import add_messages, END, StateGraph
 from langchain_core.messages import BaseMessage, HumanMessage
-from my_tools import get_datetime, get_weather, web_search
+from my_tools import get_datetime, get_weather, web_search, retriever_tool
 from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.memory import MemorySaver
 
@@ -18,7 +18,7 @@ llm = ChatOpenAI(
         "thinking": {"type": "disabled"}  # 关键：关闭思考模式
     }
 )
-tools = [get_datetime, get_weather, web_search]
+tools = [get_datetime, get_weather, web_search, retriever_tool]
 llm_with_tools = llm.bind_tools(tools=tools)
 
 class ChatbotState(TypedDict):
@@ -45,7 +45,7 @@ graph.add_conditional_edges('chatbot', tool_router)
 graph.add_edge('toolNode', 'chatbot')
 
 checkpointer = MemorySaver()
-app = graph.compile(interrupt_before=['toolNode'], checkpointer=checkpointer)
+app = graph.compile(checkpointer=checkpointer)
 
 config = {
     "configurable": {
@@ -54,6 +54,7 @@ config = {
 }
 def ask(query: str) -> str:
     result = app.invoke(input={'messages': [HumanMessage(content=query)]}, config=config)
+    # print(result['messages'])
     print(result['messages'][-1].content)
 
 def interrupt_ask(query: str):

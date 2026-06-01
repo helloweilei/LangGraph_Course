@@ -1,6 +1,16 @@
 from langchain_core.tools import tool
 from ddgs import DDGS
 import requests
+from langchain_core.tools.retriever import create_retriever_tool
+from rags.retriever import retriever
+
+retriever_tool = create_retriever_tool(
+    retriever=retriever,
+    name="search_from_rag",
+    description="""
+    获取小说《红楼梦》相关的信息.
+    """
+)
 
 @tool
 def web_search(query: str) -> str:
