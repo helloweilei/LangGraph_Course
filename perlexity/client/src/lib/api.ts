@@ -67,3 +67,35 @@ export async function streamChat(
     onError(error instanceof Error ? error : new Error(String(error)));
   }
 }
+
+export async function streamChat2(
+  message: string,
+  threadId: string | null,
+  onEvent: (event: ChatEvent) => void,
+  onError: (error: Error) => void,
+) {
+  const params = new URLSearchParams();
+  if (threadId) {
+    params.append("thread_id", threadId);
+  }
+
+  const eventSource = new EventSource(
+    `${API_BASE_URL}/chat/${message}?${params}`,
+  );
+
+  eventSource.onmessage = (event) => {
+    try {
+      const eventData = JSON.parse(event.data) as ChatEvent;
+      onEvent(eventData);
+      if (eventData.type === "done") {
+        eventSource.close();
+      }
+    } catch (e) {
+      console.error("Failed to parse event:", event.data, e);
+    }
+  };
+  eventSource.onerror = (error) => {
+    eventSource.close();
+    onError(error instanceof Error ? error : new Error(String(error)));
+  };
+}

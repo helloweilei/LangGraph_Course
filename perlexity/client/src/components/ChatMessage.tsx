@@ -21,9 +21,9 @@ export function ChatMessage({
     <Timeline steps={[{ toolType: toolType!, content }]} />
   ) : (
     <div
-      className={`flex gap-4 ${isUser ? "justify-end" : "justify-start"} mb-4`}
+      className={`flex gap-2 ${isUser ? "justify-end" : "justify-start"} mb-4 items-start`}
     >
-      <div className={`max-w-[70%] ${isUser ? "order-2" : "order-1"}`}>
+      <div className={`max-w-[70%] order-2`}>
         <div
           className={`rounded-lg px-4 py-2 ${
             isUser ? "bg-violet-600 text-white" : "bg-gray-200 text-gray-900"
@@ -32,6 +32,9 @@ export function ChatMessage({
           <p className="text-sm">{content}</p>
           {isLoading && <span className="animate-pulse">...</span>}
         </div>
+      </div>
+      <div className={`w-8 h-8 text-2xl ${isUser ? "order-3" : "order-1"}`}>
+        {isUser ? "🧑" : "🤖"}
       </div>
     </div>
   );

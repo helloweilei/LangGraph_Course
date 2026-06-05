@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { ChatMessage } from "@/components/ChatMessage";
-import { streamChat, ChatEvent } from "@/lib/api";
+import { streamChat2, ChatEvent } from "@/lib/api";
 
 interface Message {
   id: string;
@@ -47,7 +47,7 @@ export default function ChatPage() {
     let assistantMessage = "";
 
     try {
-      await streamChat(
+      await streamChat2(
         input,
         threadId,
         (event: ChatEvent) => {
@@ -61,11 +61,11 @@ export default function ChatPage() {
               if (lastMsg && lastMsg.role === "assistant") {
                 lastMsg.content = assistantMessage;
               } else {
-                assistantMessage = "";
+                assistantMessage = event.message!;
                 updated.push({
                   id: Date.now().toString(),
                   role: "assistant",
-                  content: event.message!,
+                  content: assistantMessage,
                   timestamp: new Date(),
                 });
               }
